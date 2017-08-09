@@ -43,13 +43,16 @@ public class HTMLExtractor {
 
     /**
      * Extracts the links for data pulling later. The method is based on the
-     * baseURL, to prevent the scraper from pulling from other random websites,
-     * and currentDepth, used for recursive calling.
+     * baseURL, to prevent the scraper from pulling from other random web sites
+     * and currentDepth, used for recursive calling. currentDepth defines the depth of the 
+     * links to search.
+     * 
+     * The links are stored in a HashSet of Strings.
      *
      * @param baseURL
      * @param currentDepth
      */
-    public void ExtractURL(String baseURL, double currentDepth) {
+    public void extractLinks(String baseURL, double currentDepth) {
 
         //If link is not already in the list, add it
         if (!links.contains(baseURL) && currentDepth < MAX_DEPTH) {
@@ -59,14 +62,12 @@ public class HTMLExtractor {
                 }
 
                 //Connect and select only links (a href tags).
-                
                 Document document = Jsoup.connect(baseURL).get();
-
                 Elements linksOnPage = document.select("a[href]");
 
                 //For each link in a page, select valid ones.
                 for (Element page : linksOnPage) {
-                    //Implement according to website being searched.
+                    //Implement according to website being searched. (specific implementation).
                     selectLink(page, currentDepth, baseURL);
                     //end specific implementation
                 }
@@ -76,7 +77,9 @@ public class HTMLExtractor {
         }
 
     }
-
+    /**Converts the links stored as HashSet of Strings, to a text file. 
+     *      Each link is stored in a single line in the text file.
+     * @param fileName*/
     public void writeLinksToFile(String fileName) {
         File file = new File(LINK_PREFIX + fileName);
 
@@ -108,7 +111,7 @@ public class HTMLExtractor {
     }
 
     /**
-     * Use the links pulled from HTMLExtract to pull data into text files.
+     * Use the links pulled from extractLinks  to pull data into text files.
      *
      * @param baseURL
      * @param fileName
@@ -157,6 +160,8 @@ public class HTMLExtractor {
 
     /**
      * Method to override
+     * @param doc
+     * @return 
      */
     public Elements selectElement(Document doc) {
         Elements element = doc.select("html");
@@ -166,6 +171,9 @@ public class HTMLExtractor {
     /**
      * Method to override
      *
+     * @param page
+     * @param currentDepth
+     * @param baseURL
      */
     public void selectLink(Element page, double currentDepth, String baseURL) {
         if (this.getClass().getSimpleName().contains("Reddit")) {
@@ -182,7 +190,9 @@ public class HTMLExtractor {
     }
 
     /**
-     * Write the input string into a line of a file.
+     * Write the input string into a line of a file. (Helper method).
+     * @param string
+     * @param bfWriter
      */
     protected void writeStringToFile(String string, BufferedWriter bfWriter) {
         try {
