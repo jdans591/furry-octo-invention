@@ -5,10 +5,15 @@
  */
 package corpus;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -30,9 +35,26 @@ public class FileOperator {
      */
     public void combineFiles(String[] tags, String fileName) {
 
-        FileUtils.listFiles(directory, tags, true)
+        ArrayList<File> arrayListFiles = listFiles(tags);
         
-        FileReader fReader = new FileReader();
+        FileReader fReader = null;
+        BufferedReader bReader = null;
+        String line = "";
+        
+        for(File file : arrayListFiles) {
+            try {
+                fReader = new FileReader(file);
+                bReader = new BufferedReader(fReader);
+                while((line = bReader.readLine()) != null) {
+                    
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(FileOperator.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(FileOperator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
     }
 
     /**
