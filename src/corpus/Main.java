@@ -41,8 +41,8 @@ public class Main {
 //        Music, Book, Film, Writing, Concert, Video_game, Netflix,
 //        Food,
 //        Beer, Eating, Cooking, Alcoholic_drink, Pizza, Coffee, Wine,
-        Photography, 
-        Animal, Dog, Cat, Pet, Family, Joke, God,
+//        Photography, 
+//        Animal, Dog, Cat, Pet, Family, Joke, God,
 //        Nerd, Student, Job, Employment, Career,
 //        Tattoo, Smoking,
     }
