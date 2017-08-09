@@ -115,7 +115,17 @@ public class Main {
 
         ////////////////////////////////////////////////////End generating word frequency list
         
+        
         ////////////////////////////////////////////////////Start calculating word specifivity
+        FileOperator fileOperator = new FileOperator();
+        ArrayList<String> tagsList = new ArrayList<>();
+        tagsList.add(".txt"); // text file only
+        tagsList.add("frequency");
+        String[] tags = tagsList.toArray(new String[tagsList.size()]);
+       
+        fileOperator.combineFiles(tags,  "combined_wikipedia_english.txt");
+        
+        
         //calculateWordSpecifivityEnglish();
         ///////////////////////////////////////////////////End calculating word specifivity
     }

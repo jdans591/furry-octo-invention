@@ -5,6 +5,8 @@
  */
 package corpus;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,9 +55,25 @@ public class WordMetadata {
     }
     
     public void calculateSpecificity() {
+        ArrayList<Integer> integerList = new ArrayList<>();
         for(Integer integer : rankings.values()) {
-            
+            integerList.add(integer);
         }
+
+        Collections.sort(integerList);
+        double[] doubleArray = integerList.stream().mapToDouble(i -> i).toArray();
+      
+        
+        Statistics statistics = new Statistics(doubleArray);
+        double median = statistics.getMedian();
+        double mean = statistics.getMean();
+        double stdDev = statistics.getStdDev();
+        
+        
+     
+        
+        
+        
     }
     
     @Override
