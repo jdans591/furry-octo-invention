@@ -28,6 +28,10 @@ public class WordMetadata {
     public WordMetadata(String name) {
         this.name = name;
     }
+    public WordMetadata(String name, String language) {
+        this.name = name;
+        this.language = language;
+    }
     
     public String getName() {
         return this.name;
@@ -46,6 +50,25 @@ public class WordMetadata {
     }
     public void setRankings(String category, int value) {
         this.rankings.put(category, value);
+    }
+    
+    public void calculateSpecificity() {
+        for(Integer integer : rankings.values()) {
+            
+        }
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof WordMetadata) {
+            WordMetadata wordMetadata = (WordMetadata) o;
+            if(this.name.equalsIgnoreCase(wordMetadata.name) && this.language.equals(wordMetadata.language)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
     
     

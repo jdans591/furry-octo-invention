@@ -43,8 +43,8 @@ public class Main {
 //        Beer, Eating, Cooking, Alcoholic_drink, Pizza, Coffee, Wine,
 //        Photography, 
 //        Animal, Dog, Cat, Pet, Family, Joke, God,
-//        Nerd, Student, Job, Employment, Career,
-//        Tattoo, Smoking,
+        Nerd, Student, Job, Employment, Career,
+        Tattoo, Smoking,
     }
 
     enum fileNames {
