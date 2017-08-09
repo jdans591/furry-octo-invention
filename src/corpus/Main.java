@@ -34,14 +34,15 @@ public class Main {
         travel, sports, photography
         
     }
-
+    /**List of categories from wikipedia */
     enum categoriesWikipedia {
 //        Travel, Wilderness, Hiking, Adventure, Fishing, Camping, Hunting, Beach,
-        Sport, Gym, Walking, Physical_fitness, Health, Dance, Football, 
-        Music, Book, Film, Writing, Concert, Video_game, Netflix,
-        Food, Beer, Eating, Cooking, Alcoholic_drink, Pizza, Coffee, Wine,
-//        Photography, 
-//        Animal, Dog, Cat, Pet, Family, Joke, God,
+//        Sport, Gym, Walking, Physical_fitness, Health, Dance, Football, 
+//        Music, Book, Film, Writing, Concert, Video_game, Netflix,
+//        Food,
+//        Beer, Eating, Cooking, Alcoholic_drink, Pizza, Coffee, Wine,
+        Photography, 
+        Animal, Dog, Cat, Pet, Family, Joke, God,
 //        Nerd, Student, Job, Employment, Career,
 //        Tattoo, Smoking,
     }
@@ -119,11 +120,12 @@ public class Main {
         ///////////////////////////////////////////////////End calculating word specifivity
     }
 
+    /**Generate a word frequency list based on the articles pulled. */
     private static void generateWordList() {
         System.out.println("Up to generating word frequency list");
         WordListGenerator wordListGenerator = new WordListGenerator();
 
-        // Generate word frequency lists for all the filenames in the fileNames enum.
+        // Generate word frequency lists for all the categoriesWikipedia enum.
         for (categoriesWikipedia category: categoriesWikipedia.values()) {
             
 
@@ -141,7 +143,7 @@ public class Main {
         HTMLExtractorWikipediaEnglish HTMLewe = new HTMLExtractorWikipediaEnglish();
         String URL = "https://en.wikipedia.org/wiki/" + topic;
 
-        HTMLewe.ExtractURL(URL, 0);
+        HTMLewe.extractLinks(URL, 0);
         HTMLewe.writeLinksToFile("wikipedia_english_" + topic + ".txt");
         HTMLewe.writeToFile(URL, "wikipedia_english_" + topic + ".txt");
     }
@@ -154,7 +156,7 @@ public class Main {
 
         String URL = "https://www.reddit.com/r/" + subReddit + "/";
 
-        HTMLExtractorReddit.ExtractURL(URL, 0);
+        HTMLExtractorReddit.extractLinks(URL, 0);
         HTMLExtractorReddit.writeLinksToFile("reddit_" + subReddit + ".txt");
         HTMLExtractorReddit.writeToFile(URL, "reddit_" + subReddit + ".txt");
     }
@@ -190,6 +192,11 @@ public class Main {
         return listString;
     }
     
+    /**From all the relevant word frequency lists, calculate the word 'specifivity'. This is an estimate
+            measure of how 'specific' a word is to its category. For example, if a word is common in all categories, 
+            or it is uncommon in all categories, then that word is not very 'specific'. However, if a word is common
+            in only a few category, but uncommon in most of the other categories, then the word is deemed to be
+            quite specific and thus will have a higher 'specifivity' rating.*/
     private static void calculateWordSpecifivityEnglish(String fileName) {
         
         String currentDirectory = System.getProperty("user.dir");
