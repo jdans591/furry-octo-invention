@@ -43,7 +43,7 @@ public class HTMLExtractorWikipediaEnglish extends HTMLExtractor {
         if (linkName.contains("https://en.wikipedia.org/wiki/") && !linkName.contains("#")
                 && !linkName.contains("redlink=1") && linkName.length() - linkName.replace(":", "").length() <= 1) {
             currentDepth++;
-            ExtractURL(page.attr("abs:href"), currentDepth + super.MAX_DEPTH - MAX_DEPTH);
+            extractLinks(page.attr("abs:href"), currentDepth + super.MAX_DEPTH - MAX_DEPTH);
         }
     }
 

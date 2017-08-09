@@ -52,10 +52,10 @@ public class HTMLExtractorReddit extends HTMLExtractor {
 
             if (page.attr("abs:href").contains(modifier) && false) {
                 currentDepth++;
-                ExtractURL(page.attr("abs:href"), currentDepth + super.MAX_DEPTH - MAX_DEPTH);
+                extractLinks(page.attr("abs:href"), currentDepth + super.MAX_DEPTH - MAX_DEPTH);
             } else if (page.attr("abs:href").contains("?count")) {
                 currentDepth = currentDepth + MAX_DEPTH / MAX_PAGE;
-                ExtractURL(page.attr("abs:href"), currentDepth + super.MAX_DEPTH - MAX_DEPTH);
+                extractLinks(page.attr("abs:href"), currentDepth + super.MAX_DEPTH - MAX_DEPTH);
 
             }
 
