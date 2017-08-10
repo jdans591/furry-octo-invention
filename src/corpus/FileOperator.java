@@ -147,18 +147,33 @@ public class FileOperator {
      * frequency or ranking.
      *
      * @param wordMetadatas
+     * @param fileName the file name (including extension) of the file to write to.
      */
-    public void writeWordMetadatasToFile(ArrayList<WordMetadata> wordMetadatas) {
+    public void writeWordMetadatasToFile(ArrayList<WordMetadata> wordMetadatas, String fileName) {
+        
+        String line; //Define a string line to represent the string representation of a wordMetadata.
 
         String currentDirectory = System.getProperty("user.dir");
-        File root = new File(currentDirectory);
+        File root = new File(currentDirectory + File.separator +"fileName");
+        
 
         try {
-            FileWriter fWriter = null;
-            BufferedWriter bWriter = null;
+            FileWriter fWriter;
+            BufferedWriter bWriter;
 
-            fWriter = new FileWriter(root);
+            
+            fWriter = new FileWriter(root, true); //Default is to append string.
             bWriter = new BufferedWriter(fWriter);
+            
+            //For each wordMetadata, convert to a string representation, and write its content to the file.
+            for(WordMetadata wordMetadata : wordMetadatas) {
+                line = wordMetadata.toString();
+                bWriter.write(line);
+                bWriter.newLine();
+            }
+            
+            bWriter.close();
+            fWriter.close();
 
         } catch (IOException ex) {
             Logger.getLogger(FileOperator.class.getName()).log(Level.SEVERE, null, ex);
@@ -166,50 +181,6 @@ public class FileOperator {
 
     }
 
-    /**
-     * A helper method aimed to convert a wordMetadata into a string
-     * representation, usually to write to a file later.
-     *
-     * @param wordMetadata
-     * @return The string representation of the wordMetadata, ready to be
-     * written to a file.
-     */
-    protected String wordMetadataToString(WordMetadata wordMetadata) {
-        String result; //Define string result to be the resultant string to be returned.
-        String name;
-        String frequencyString; //Define frequencyString to be the string containing all the frequency categories and values
-        String rankingString;
-        String temp = "";
-        ArrayList<String> frequenciesCategories;
-        ArrayList<String> rankingsCategories;
-
-        //We want the name, frequency map, and ranking map.
-        name = wordMetadata.getName(); // Name done.
-
-        frequenciesCategories = wordMetadata.getFrequencyCategories(); //Get the categories in array list of string format.
-        rankingsCategories = wordMetadata.getRankingCategories();
-
-        Collections.sort(frequenciesCategories); //Sort both lists so that the resulting string is written in alphabetical order.
-        Collections.sort(rankingsCategories);
-
-        //For each frequency category, append the temporary string with the category name and the actual frequency, in alphabetical order.
-        for (String frequencyCategory : frequenciesCategories) {
-            wordMetadata.getFrequency(frequencyCategory);
-            temp = temp + frequencyCategory + " " + wordMetadata.getFrequency(frequencyCategory).toString() + " ";
-        }
-        frequencyString = temp.substring(0, temp.length() - 1); // remove the last character of the temporary string (a whitespace).
-        temp = ""; // reset the temp string for use in the next loop.
-
-        //For each ranking category, append the rankingString with the category name and the actual ranking, in alphabetical order.
-        for (String rankingCategory : rankingsCategories) {
-            wordMetadata.getRanking(rankingCategory);
-            temp = temp + rankingCategory + " " + wordMetadata.getRanking(rankingCategory).toString() + " ";
-        }
-        rankingString = temp.substring(0, temp.length() - 1); // remove the last character of the temporary string (a whitespace).
-
-        result = name + "\t" + frequencyString + "\t" + rankingString;
-
-        return result;
-    }
+   
 
 }

@@ -236,5 +236,51 @@ public class WordMetadata {
         hash = 97 * hash + Objects.hashCode(this.rankings);
         return hash;
     }
+    
+     /**
+     * An overridden method aimed to convert a wordMetadata into a string
+     * representation, usually to write to a file later.
+     *
+     * @return The string representation of the wordMetadata, ready to be
+     * written to a file.
+     */
+    @Override
+    public String toString() {
+        String result; //Define string result to be the resultant string to be returned.
+        String wordName;
+        String frequencyString; //Define frequencyString to be the string containing all the frequency categories and values
+        String rankingString;
+        String temp = "";
+        ArrayList<String> frequenciesCategories;
+        ArrayList<String> rankingsCategories;
+
+        //We want the name, frequency map, and ranking map.
+        wordName = this.getName(); // Name done.
+
+        frequenciesCategories = this.getFrequencyCategories(); //Get the categories in array list of string format.
+        rankingsCategories = this.getRankingCategories();
+
+        Collections.sort(frequenciesCategories); //Sort both lists so that the resulting string is written in alphabetical order.
+        Collections.sort(rankingsCategories);
+
+        //For each frequency category, append the temporary string with the category name and the actual frequency, in alphabetical order.
+        for (String frequencyCategory : frequenciesCategories) {
+            this.getFrequency(frequencyCategory);
+            temp = temp + frequencyCategory + " " + this.getFrequency(frequencyCategory).toString() + " ";
+        }
+        frequencyString = temp.substring(0, temp.length() - 1); // remove the last character of the temporary string (a whitespace).
+        temp = ""; // reset the temp string for use in the next loop.
+
+        //For each ranking category, append the rankingString with the category name and the actual ranking, in alphabetical order.
+        for (String rankingCategory : rankingsCategories) {
+            this.getRanking(rankingCategory);
+            temp = temp + rankingCategory + " " + this.getRanking(rankingCategory).toString() + " ";
+        }
+        rankingString = temp.substring(0, temp.length() - 1); // remove the last character of the temporary string (a whitespace).
+
+        result = wordName + "\t" + frequencyString + "\t" + rankingString;
+
+        return result;
+    }
 
 }
