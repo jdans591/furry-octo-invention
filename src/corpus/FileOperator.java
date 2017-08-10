@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package corpus;
 
 import java.io.BufferedReader;
@@ -19,96 +14,115 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 /**
- *Deals with operations relating to file input/output.
+ * Deals with operations relating to file input/output.
+ *
  * @author Dhanasit
  */
 public class FileOperator {
-    
-    
-    
-    public FileOperator() {
-        
-    }
+
     /**
-     * Combine files into a single file name. The file is
+     * Default constructor
+     */
+    public FileOperator() {
+
+    }
+
+    /**
+     * Combine files into a single file name.
      *
-     * @param tag the list of tags the file must contain
+     * @param tags the list of tags the file must contain
      * @param fileName the output file name
      */
     public void combineFiles(String[] tags, String fileName) {
 
+        //Definitions of variables. These include arrayListFiles which is the list of relevant file names to combine.
+        //Readers and writers are also defined here.
         ArrayList<File> arrayListFiles = listFiles(tags);
-        
-        FileReader fReader = null;
-        BufferedReader bReader = null;
+        FileReader fReader;
+        BufferedReader bReader;
         FileWriter fWriter = null;
         BufferedWriter bWriter = null;
-        String line = "";
+        //Define String line, which is the current line text pulled from buffered reader.
+        //Define String array components, which are each component of information from the line. The default split is by tab character.
+        String line;
         String[] components;
-        int counter = 1;
-        boolean flag = false;
+        //Define counter, which is the current lineNumber.
+        //Define flag, which means whether the wordMetadata read from the frequency list is already present in the local list.
+        int counter;
+        boolean flag;
+        //Define wordMetadatas, which is a list of all the wordMetadata that we want to write to a single file later.
         ArrayList<WordMetadata> wordMetadatas = new ArrayList<>();
-        
-        for(File file : arrayListFiles) {
+
+        //For each file in the relevant file list...
+        for (File file : arrayListFiles) {
             try {
                 counter = 1; //counter reset for each file.
+                //Instantiate readers.
                 fReader = new FileReader(file);
                 bReader = new BufferedReader(fReader);
-                while((line = bReader.readLine()) != null) {
-                    flag = false;
+                //Read a line from a file and check if it's null.
+                while ((line = bReader.readLine()) != null) {
+                    flag = false; //By default
                     components = line.split("\t"); //Split along tabs, components[0] should be the word, components[1] should be the frequency..
-                    if(components.length == 1) {
+                    //components' length should be 1 as there should be multiple components in a single line (e.g. word name, frequency).
+                    if (components.length == 1) {
                         break;
                     }
+                    //From how the file name is named, the category name should be the 2nd to last word in the file name, excluding the .txt file extension.
                     String category = file.getName().split("_")[file.getName().split("_").length - 3];
+                    //components[0] should be the word name.
                     WordMetadata WM = new WordMetadata(components[0], "english");
+                    //components[1] should be the frequency of the word of that particular topic/file.
                     int frequency = Integer.parseInt(components[1]);
-                    WM.setFrequencies(category, frequency);
-                    WM.setRankings(category, counter);
-                    
-                  
+                    //Record the frequencies and rankings of the wordMetadata by category.
+                    WM.setFrequency(category, frequency);
+                    WM.setRanking(category, counter);
+
                     // Iterate through the wordMetadatas, checking if the generated WM pulled from the bufferedReader is in it. (equal name and language).
-                    for(WordMetadata wordMetadata : wordMetadatas) {
-                        if(wordMetadata.equals(WM)) { //If the metadata already exists then add to the frequency
-                            wordMetadata.setFrequencies(category, frequency);
-                            wordMetadata.setRankings(category, counter);
-                            flag = true;
+                    for (WordMetadata wordMetadata : wordMetadatas) {
+                        if (wordMetadata.equals(WM)) { //If the metadata already exists then override the frequencies and rankings.
+                            //By how the files are pulled, since each word in a file should be unique, and each file should have a unique category, the 
+                            //wordMetadata instantiated should be unique and thus this overridden shouldn't happen often, if at all.
+                            wordMetadata.setFrequency(category, frequency);
+                            wordMetadata.setRanking(category, counter);
+                            flag = true; //Set flag to true (see flag definition at top of method).
                             break;
                         }
-                        
+
                     }
-                    //If the wordMetadatas doesn't contain the current WM.
-                    if(flag == false) {
+                    //If the list of wordMetadata doesn't contain the wordMetadata read from the line, then add to the list.
+                    if (flag == false) {
                         wordMetadatas.add(WM);
                     }
-                    
-                    
-                    
-                    
-                    counter++;
-                }
+
+                    counter++; //Increment counter (see definition of counter at top of method).
+                } //end read 1 line.
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(FileOperator.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(FileOperator.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+        //Here we should have an array list of wordMetadata ready to be written to a file.
+
     }
 
     /**
      * List relevant files according to the tag and root directory (working
-     * directory).
+     * directory). A relevant file must have all the tag string from the tags
+     * input.
      *
      * @param tags.
      * @return a list of relevant file.
      */
     public ArrayList<File> listFiles(String[] tags) {
-        String currentDirectory = System.getProperty("user.dir");
+        String currentDirectory = System.getProperty("user.dir"); //Get the current directory of the system.
         File root = new File(currentDirectory);
 
+        //Get a collection of all the txt files in the current directory.
         ArrayList<File> arrayListFiles = new ArrayList<>();
         Collection<File> files = FileUtils.listFiles(root, "txt".split("  "), true);
+        //For each file, check whether it contains all the tags. These are the relevant files.
         for (File file : files) {
             for (String tag : tags) {
                 if (!file.getName().contains(tag)) {
@@ -117,32 +131,51 @@ public class FileOperator {
 
                 }
             }
-
+            //Add the file to the list of relevant files.
             arrayListFiles.add(file);
 
         }
-        return arrayListFiles;
+        return arrayListFiles; //return the relevant files.
 
     }
-    
+
+    /**Write the array list of wordMetadata to a file. Each wordMetadata should occupy one line, with each field separated by a tab character.
+     * There should be a space between the category name and its corresponding frequency or ranking.
+     * @param wordMetadatas
+     */
     public void writeWordMetadatasToFile(ArrayList<WordMetadata> wordMetadatas) {
-        
+
         String currentDirectory = System.getProperty("user.dir");
         File root = new File(currentDirectory);
-        
-        
+
         try {
             FileWriter fWriter = null;
             BufferedWriter bWriter = null;
-            
+
             fWriter = new FileWriter(root);
             bWriter = new BufferedWriter(fWriter);
-            
-            
+
         } catch (IOException ex) {
             Logger.getLogger(FileOperator.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+    /**A helper method aimed to convert a wordMetadata into a string representation, usually to write to a file later.
+     * @param wordMetadata
+     * @return  The string representation of the wordMetadata, ready to be written to a file.*/
+    protected String wordMetadataToString(WordMetadata wordMetadata) {
+        String result; //Define string result to be the resultant string to be returned.
+        String name;
+        String frequencyMap;
+        String rankingMap;
+        
+        //We want the name, frequency map, and ranking map.
+        name = wordMetadata.getName();
+        frequencyMap = wordMetadata.getFrequency(name)
+                
+        
+        
+        return result;
+    }
+
 }

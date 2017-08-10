@@ -49,6 +49,72 @@ public class WordMetadata {
     }
 
     /**
+     * Get all the categories present in the frequencies map.
+     *
+     * @return An array list of strings that contain the categories in the
+     * frequencies field map.
+     */
+    public ArrayList<String> getFrequencyCategories() {
+        ArrayList<String> result = new ArrayList<>(); //Define result to be the array list of strings that contains the categories in the frequencies field map.
+
+        //Iterate through each category in the frequencies field map.
+        frequencies.keySet().forEach((category) -> {
+            result.add(category);
+        });
+
+        return result;
+    }
+
+    /**
+     * Get all the categories present in the rankings map.
+     *
+     * @return An array list of strings that contain the categories in the
+     * rankings field map.
+     */
+    public ArrayList<String> getRankingCategories() {
+        ArrayList<String> result = new ArrayList<>(); // Define result to be the array list of strings that contains the categories in the rankings field map.
+
+        //Iterate through each category in the rankings field map.
+        rankings.keySet().forEach((category) -> {
+            result.add(category);
+        });
+
+        return result;
+    }
+
+    /**
+     * Get all the frequencies in the frequencies field map.
+     *
+     * @return
+     */
+    public ArrayList<Integer> getFrequencies() {
+        ArrayList<Integer> result = new ArrayList<>(); // Define result to be the array list of integer that contains all the frequencies for each category in the 
+        //frequencies field map.
+        //Iterate through each frequency in the frequencies field map.
+        frequencies.values().forEach((frequency) -> {
+            result.add(frequency);
+        });
+
+        return result;
+    }
+
+    /**
+     * Get all the rankings in the rankings field map.
+     *
+     * @return
+     */
+    public ArrayList<Integer> getRankings() {
+        ArrayList<Integer> result = new ArrayList<>(); // Define result to be the array list of integer that contains all the rankings for each category in the 
+        //rankings field map.
+        //Iterate through each ranking in the rankings field map.
+        rankings.values().forEach((ranking) -> {
+            result.add(ranking);
+        });
+
+        return result;
+    }
+
+    /**
      * Return the name (the spelling of the word)
      *
      * @return . the lexicographical spelling of the word.
@@ -67,44 +133,44 @@ public class WordMetadata {
     }
 
     /**
-     * Get the frequencies of the word from the input category (topic).
+     * Get the frequency of the word from the input category (topic).
      *
      * @param category
      * @return The frequency of the word
      */
-    public Integer getFrequencies(String category) {
+    public Integer getFrequency(String category) {
         return this.frequencies.get(category);
     }
 
     /**
-     * Get the rankings of the word from the input category (topic). The ranking
+     * Get the ranking of the word from the input category (topic). The ranking
      * is the rank of the word's popularity for a particular input
      * topic/category.
      *
      * @param category
      * @return The ranking of the word.
      */
-    public Integer getRankings(String category) {
+    public Integer getRanking(String category) {
         return this.rankings.get(category);
     }
 
     /**
-     * Set the frequencies of the word for an input category and value.
+     * Set the frequency of the word for an input category and value.
      *
      * @param category
      * @param value
      */
-    public void setFrequencies(String category, int value) {
+    public void setFrequency(String category, int value) {
         this.frequencies.put(category, value);
     }
 
     /**
-     * Set the rankings of the word for an input category and value.
+     * Set the ranking of the word for an input category and value.
      *
      * @param category
      * @param value
      */
-    public void setRankings(String category, int value) {
+    public void setRanking(String category, int value) {
         this.rankings.put(category, value);
     }
 
@@ -114,8 +180,10 @@ public class WordMetadata {
      * topic. A higher value indicates that a word is more specific to a topic.
      * A lower value indicates that a word is generally used across many
      * different topics.
+     *
+     * @return the word specificity value as a double.
      */
-    public void calculateSpecificity() {
+    public double calculateSpecificity() {
         ArrayList<Integer> integerList = new ArrayList<>();
 
         //Convert the values in the rankings to a list of integers.
@@ -133,20 +201,20 @@ public class WordMetadata {
         double mean = statistics.getMean();
         double stdDev = statistics.getStdDev();
 
+        return stdDev;
+
     }
 
-    /**
-     *
-     * @param o
-     * @return
-     */
-    @Override
     /**
      * This method overrides the standard 'equals' method used in Java. It
      * compares the WordMetadata to see if they are equal. 2 WordMetadata are
      * defined to be equal if the lower case of the WordMetadata have the same
      * name AND come from the same language.
+     *
+     * @param o the object for comparison (hopefully a WordMetadata object).
+     * @return whether the 2 objects are equal.
      */
+    @Override
     public boolean equals(Object o) {
         if (o instanceof WordMetadata) {
             WordMetadata wordMetadata = (WordMetadata) o;
