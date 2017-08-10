@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -139,8 +140,12 @@ public class FileOperator {
 
     }
 
-    /**Write the array list of wordMetadata to a file. Each wordMetadata should occupy one line, with each field separated by a tab character.
-     * There should be a space between the category name and its corresponding frequency or ranking.
+    /**
+     * Write the array list of wordMetadata to a file. Each wordMetadata should
+     * occupy one line, with each field separated by a tab character. There
+     * should be a space between the category name and its corresponding
+     * frequency or ranking.
+     *
      * @param wordMetadatas
      */
     public void writeWordMetadatasToFile(ArrayList<WordMetadata> wordMetadatas) {
@@ -160,21 +165,50 @@ public class FileOperator {
         }
 
     }
-    /**A helper method aimed to convert a wordMetadata into a string representation, usually to write to a file later.
+
+    /**
+     * A helper method aimed to convert a wordMetadata into a string
+     * representation, usually to write to a file later.
+     *
      * @param wordMetadata
-     * @return  The string representation of the wordMetadata, ready to be written to a file.*/
+     * @return The string representation of the wordMetadata, ready to be
+     * written to a file.
+     */
     protected String wordMetadataToString(WordMetadata wordMetadata) {
         String result; //Define string result to be the resultant string to be returned.
         String name;
-        String frequencyMap;
-        String rankingMap;
-        
+        String frequencyString; //Define frequencyString to be the string containing all the frequency categories and values
+        String rankingString;
+        String temp = "";
+        ArrayList<String> frequenciesCategories;
+        ArrayList<String> rankingsCategories;
+
         //We want the name, frequency map, and ranking map.
-        name = wordMetadata.getName();
-        frequencyMap = wordMetadata.getFrequency(name)
-                
-        
-        
+        name = wordMetadata.getName(); // Name done.
+
+        frequenciesCategories = wordMetadata.getFrequencyCategories(); //Get the categories in array list of string format.
+        rankingsCategories = wordMetadata.getRankingCategories();
+
+        Collections.sort(frequenciesCategories); //Sort both lists so that the resulting string is written in alphabetical order.
+        Collections.sort(rankingsCategories);
+
+        //For each frequency category, append the temporary string with the category name and the actual frequency, in alphabetical order.
+        for (String frequencyCategory : frequenciesCategories) {
+            wordMetadata.getFrequency(frequencyCategory);
+            temp = temp + frequencyCategory + " " + wordMetadata.getFrequency(frequencyCategory).toString() + " ";
+        }
+        frequencyString = temp.substring(0, temp.length() - 1); // remove the last character of the temporary string (a whitespace).
+        temp = ""; // reset the temp string for use in the next loop.
+
+        //For each ranking category, append the rankingString with the category name and the actual ranking, in alphabetical order.
+        for (String rankingCategory : rankingsCategories) {
+            wordMetadata.getRanking(rankingCategory);
+            temp = temp + rankingCategory + " " + wordMetadata.getRanking(rankingCategory).toString() + " ";
+        }
+        rankingString = temp.substring(0, temp.length() - 1); // remove the last character of the temporary string (a whitespace).
+
+        result = name + "\t" + frequencyString + "\t" + rankingString;
+
         return result;
     }
 
