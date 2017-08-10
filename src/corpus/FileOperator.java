@@ -105,7 +105,7 @@ public class FileOperator {
             }
         }
         //Here we should have an array list of wordMetadata ready to be written to a file.
-
+        this.writeWordMetadatasToFile(wordMetadatas, fileName);
     }
 
     /**
@@ -149,7 +149,7 @@ public class FileOperator {
      * @param wordMetadatas
      * @param fileName the file name (including extension) of the file to write to.
      */
-    public void writeWordMetadatasToFile(ArrayList<WordMetadata> wordMetadatas, String fileName) {
+    protected void writeWordMetadatasToFile(ArrayList<WordMetadata> wordMetadatas, String fileName) {
         
         String line; //Define a string line to represent the string representation of a wordMetadata.
 

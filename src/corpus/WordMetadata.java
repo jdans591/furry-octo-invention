@@ -18,6 +18,7 @@ public class WordMetadata {
     private String name;
     private String language;
     private String PoS;
+    private double specificity;
     private HashMap<String, Integer> frequencies = new HashMap(); // A map of frequencies of this word for each category/topic.
     private HashMap<String, Integer> rankings = new HashMap();
 
@@ -46,6 +47,16 @@ public class WordMetadata {
     public WordMetadata(String name, String language) {
         this.name = name;
         this.language = language;
+    }
+    /**Set the word specificity rating for this wordMetadata
+     * @param specificity */
+    protected void setSpecificity(double specificity) {
+        this.specificity = specificity;
+    }
+    /**Get the word specificity rating for this wordMetadata
+     * @return  */
+    public double getSpecificity() {
+        return this.specificity;
     }
 
     /**
@@ -201,6 +212,7 @@ public class WordMetadata {
         double mean = statistics.getMean();
         double stdDev = statistics.getStdDev();
 
+        this.setSpecificity(stdDev); // Set the specificity rating for this wordMetadata.
         return stdDev;
 
     }
@@ -278,7 +290,7 @@ public class WordMetadata {
         }
         rankingString = temp.substring(0, temp.length() - 1); // remove the last character of the temporary string (a whitespace).
 
-        result = wordName + "\t" + frequencyString + "\t" + rankingString;
+        result = wordName + "\t" + frequencyString + "\t" + rankingString + "\t" + this.getSpecificity();
 
         return result;
     }

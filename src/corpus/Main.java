@@ -123,6 +123,7 @@ public class Main {
         tagsList.add("frequency");
         String[] tags = tagsList.toArray(new String[tagsList.size()]);
        
+        
         fileOperator.combineFiles(tags,  "combined_wikipedia_english.txt");
         
         
