@@ -50,6 +50,7 @@ public class FileOperator {
         //Define counter, which is the current lineNumber.
         //Define flag, which means whether the wordMetadata read from the frequency list is already present in the local list.
         int counter;
+        int counters = 0;
         boolean flag;
         //Define wordMetadatas, which is a list of all the wordMetadata that we want to write to a single file later.
         ArrayList<WordMetadata> wordMetadatas = new ArrayList<>();
@@ -103,6 +104,11 @@ public class FileOperator {
             } catch (IOException ex) {
                 Logger.getLogger(FileOperator.class.getName()).log(Level.SEVERE, null, ex);
             }
+            System.out.println("Generated wordMetadata for a file.");
+             if(counters > 0) {
+                break;
+            }
+            counters++;
         }
         //Here we should have an array list of wordMetadata ready to be written to a file.
         this.writeWordMetadatasToFile(wordMetadatas, fileName);
@@ -119,22 +125,28 @@ public class FileOperator {
     public ArrayList<File> listFiles(String[] tags) {
         String currentDirectory = System.getProperty("user.dir"); //Get the current directory of the system.
         File root = new File(currentDirectory);
+        boolean flag; // Define flag to be whether a file contains every single tag.
+        
 
         //Get a collection of all the txt files in the current directory.
         ArrayList<File> arrayListFiles = new ArrayList<>();
         Collection<File> files = FileUtils.listFiles(root, "txt".split("  "), true);
         //For each file, check whether it contains all the tags. These are the relevant files.
         for (File file : files) {
+            flag = true; // Assume the file is valid until it's proven to be guilty.
             for (String tag : tags) {
                 if (!file.getName().contains(tag)) {
+                    flag = false;
                     break; // go to next file
                 } else {
 
                 }
             }
-            //Add the file to the list of relevant files.
-            arrayListFiles.add(file);
-
+            if (flag == true) { // If a file contains every single tag, then add the file.
+                //Add the file to the list of relevant files.
+                arrayListFiles.add(file);
+            }
+           
         }
         return arrayListFiles; //return the relevant files.
 
@@ -147,31 +159,30 @@ public class FileOperator {
      * frequency or ranking.
      *
      * @param wordMetadatas
-     * @param fileName the file name (including extension) of the file to write to.
+     * @param fileName the file name (including extension) of the file to write
+     * to.
      */
     protected void writeWordMetadatasToFile(ArrayList<WordMetadata> wordMetadatas, String fileName) {
-        
+
         String line; //Define a string line to represent the string representation of a wordMetadata.
 
         String currentDirectory = System.getProperty("user.dir");
-        File root = new File(currentDirectory + File.separator +"fileName");
-        
+        File root = new File(currentDirectory + File.separator + "fileName");
 
         try {
             FileWriter fWriter;
             BufferedWriter bWriter;
 
-            
             fWriter = new FileWriter(root, true); //Default is to append string.
             bWriter = new BufferedWriter(fWriter);
-            
+
             //For each wordMetadata, convert to a string representation, and write its content to the file.
-            for(WordMetadata wordMetadata : wordMetadatas) {
+            for (WordMetadata wordMetadata : wordMetadatas) {
                 line = wordMetadata.toString();
                 bWriter.write(line);
                 bWriter.newLine();
             }
-            
+
             bWriter.close();
             fWriter.close();
 
@@ -180,7 +191,5 @@ public class FileOperator {
         }
 
     }
-
-   
 
 }

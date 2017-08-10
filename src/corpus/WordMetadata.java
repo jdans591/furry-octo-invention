@@ -48,13 +48,21 @@ public class WordMetadata {
         this.name = name;
         this.language = language;
     }
-    /**Set the word specificity rating for this wordMetadata
-     * @param specificity */
+
+    /**
+     * Set the word specificity rating for this wordMetadata
+     *
+     * @param specificity
+     */
     protected void setSpecificity(double specificity) {
         this.specificity = specificity;
     }
-    /**Get the word specificity rating for this wordMetadata
-     * @return  */
+
+    /**
+     * Get the word specificity rating for this wordMetadata
+     *
+     * @return
+     */
     public double getSpecificity() {
         return this.specificity;
     }
@@ -248,8 +256,8 @@ public class WordMetadata {
         hash = 97 * hash + Objects.hashCode(this.rankings);
         return hash;
     }
-    
-     /**
+
+    /**
      * An overridden method aimed to convert a wordMetadata into a string
      * representation, usually to write to a file later.
      *
