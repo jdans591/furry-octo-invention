@@ -40,9 +40,6 @@ public class FileOperator {
         //Definitions of variables. These include arrayListFiles which is the list of relevant file names to combine.
         //Readers and writers are also defined here.
         ArrayList<File> arrayListFiles = listFiles(tags);
-        for (File file : arrayListFiles) {
-            System.out.println(file.getName());
-        }
 
         FileReader fReader;
         BufferedReader bReader;
@@ -59,11 +56,7 @@ public class FileOperator {
         boolean flag;
         //Define wordMetadatas, which is a list of all the wordMetadata that we want to write to a single file later.
         ArrayList<WordMetadata> wordMetadatas = new ArrayList<>();
-        ArrayList<String> categories = new ArrayList<>();
-
-        for (File file : arrayListFiles) {
-            categories.add(file.getName().split("_")[file.getName().split("_").length - 3]);
-        }
+       
         //For each file in the relevant file list...
         for (File file : arrayListFiles) {
             try {
@@ -89,6 +82,10 @@ public class FileOperator {
                     WM.setFrequency(category, frequency);
 
                     WM.setRanking(category, counter);
+                    
+                    if(WM.getFrequency(category) < 5) {
+                        continue;
+                    }
 
                     //Check if the wordMetadatas contain the temporary WM wordmetadata.
                     for (WordMetadata wordMetadata : wordMetadatas) {
@@ -109,29 +106,7 @@ public class FileOperator {
 
                     }
 
-//                    // Iterate through the wordMetadatas, checking if the generated WM pulled from the bufferedReader is in it. (equal name and language).
-//                    for (WordMetadata wordMetadata : wordMetadatas) {
-//                        if (wordMetadata.equals(WM)) { //If the metadata already exists then override the frequencies and rankings.
-//                            //By how the files are pulled, since each word in a file should be unique, and each file should have a unique category, the 
-//                            //wordMetadata instantiated should be unique and thus this overridden shouldn't happen often, if at all.
-//                            if (wordMetadata.getName().equalsIgnoreCase(WM.getName())) {
-//
-//                                if (wordMetadata.getFrequency(category) != null && wordMetadata.getRanking(category) != null) {
-//                                    wordMetadata.setFrequency(category, frequency + wordMetadata.getFrequency(category));
-//                                    wordMetadata.setRanking(category, wordMetadata.getRanking(category));
-//                                }
-//
-//                                flag = true;
-//                                break;
-//                            }
-//                            wordMetadata.setFrequency(category, frequency);
-//                            wordMetadata.setRanking(category, counter);
-//                            System.out.println(WM.toString());
-//                            flag = true; //Set flag to true (see flag definition at top of method).
-//                            break;
-//                        }
-//                }
-                    //If the list of wordMetadata doesn't contain the wordMetadata read from the line, then add to the list.
+        //If the list of wordMetadata doesn't contain the wordMetadata read from the line, then add to the list.
                     if (flag == false) {
                         wordMetadatas.add(WM);
                     }
