@@ -26,9 +26,12 @@ public class Main {
 
     enum categoriesReddit {
         travel, sports, photography
-        
+
     }
-    /**List of categories from wikipedia */
+
+    /**
+     * List of categories from wikipedia
+     */
     enum categoriesWikipedia {
 //        Travel, Wilderness, Hiking, Adventure, Fishing, Camping, Hunting, Beach,
 //        Sport, Gym, Walking, Physical_fitness, Health, Dance, Football, 
@@ -45,8 +48,8 @@ public class Main {
 //        reddit_travel, reddit_sports, reddit_photography,
 //        wikipedia_english_Travel, wikipedia_english_Wilderness, wikipedia_english_Hiking, wikipedia_english_Adventure, wikipedia_english_Fishing, 
 //        wikipedia_english_Camping, wikipedia_english_Hunting, wikipedia_english_Beach, 
-        wikipedia_english_Sport, wikipedia_english_Gym, wikipedia_english_Walking, wikipedia_english_Physical_fitness, wikipedia_english_Health, 
-        wikipedia_english_Dance, wikipedia_english_Football, 
+        wikipedia_english_Sport, wikipedia_english_Gym, wikipedia_english_Walking, wikipedia_english_Physical_fitness, wikipedia_english_Health,
+        wikipedia_english_Dance, wikipedia_english_Football,
         wikipedia_english_
 
     }
@@ -94,7 +97,6 @@ public class Main {
 //                scrapeReddit(category.toString());
 //            }
 //        }
-
         // scrape wikipedia based on input topic. Iterate through the enums
         for (categoriesWikipedia category : categoriesWikipedia.values()) {
             if (!listStringWikipedia.contains(category.name())) {
@@ -108,31 +110,29 @@ public class Main {
         generateWordList();
 
         ////////////////////////////////////////////////////End generating word frequency list
-        
-        
         ////////////////////////////////////////////////////Start calculating word specifivity
         FileOperator fileOperator = new FileOperator();
         ArrayList<String> tagsList = new ArrayList<>();
         tagsList.add(".txt"); // text file only
         tagsList.add("frequency");
         String[] tags = tagsList.toArray(new String[tagsList.size()]);
-       
+
         System.out.println("Up to combining files");
-        fileOperator.combineFiles(tags,  "combined_wikipedia_english.txt");
-        
-        
+        fileOperator.combineFiles(tags, "combined_wikipedia_english.txt");
+
         //calculateWordSpecifivityEnglish();
         ///////////////////////////////////////////////////End calculating word specifivity
     }
 
-    /**Generate a word frequency list based on the articles pulled. */
+    /**
+     * Generate a word frequency list based on the articles pulled.
+     */
     private static void generateWordList() {
         System.out.println("Up to generating word frequency list");
         WordListGenerator wordListGenerator = new WordListGenerator();
 
         // Generate word frequency lists for all the categoriesWikipedia enum.
-        for (categoriesWikipedia category: categoriesWikipedia.values()) {
-            
+        for (categoriesWikipedia category : categoriesWikipedia.values()) {
 
             wordListGenerator.generateWordFrequencyListEnglish("wikipedia_english_" + category.name(), 1);
             System.out.println("Successful?");
@@ -196,53 +196,54 @@ public class Main {
 
         return listString;
     }
-    
-    /**From all the relevant word frequency lists, calculate the word 'specifivity'. This is an estimate
-            measure of how 'specific' a word is to its category. For example, if a word is common in all categories, 
-            or it is uncommon in all categories, then that word is not very 'specific'. However, if a word is common
-            in only a few category, but uncommon in most of the other categories, then the word is deemed to be
-            quite specific and thus will have a higher 'specifivity' rating.*/
+
+    /**
+     * From all the relevant word frequency lists, calculate the word
+     * 'specifivity'. This is an estimate measure of how 'specific' a word is to
+     * its category. For example, if a word is common in all categories, or it
+     * is uncommon in all categories, then that word is not very 'specific'.
+     * However, if a word is common in only a few category, but uncommon in most
+     * of the other categories, then the word is deemed to be quite specific and
+     * thus will have a higher 'specifivity' rating.
+     */
     private static void calculateWordSpecifivityEnglish(String fileName) {
-        
+
         String currentDirectory = System.getProperty("user.dir");
         File root = new File(currentDirectory);
         File[] fileList = root.listFiles();
-        
-        for(File file : fileList) { // look for text files which have the relevant file name input.
-            if(file.getName().contains(fileName) && file.getName().contains(".txt") && file.getName().contains("frequency_list") && 
-                    file.getName().contains("english")) {
-                
+
+        for (File file : fileList) { // look for text files which have the relevant file name input.
+            if (file.getName().contains(fileName) && file.getName().contains(".txt") && file.getName().contains("frequency_list")
+                    && file.getName().contains("english")) {
+
             }
         }
         String[] stringArray = new String[1];
         stringArray[0] = "txt";
         Collection<File> files = FileUtils.listFiles(root, "txt".split("  "), true);
-        
-        
-        
+
         FileReader fReader = null;
         BufferedReader bReader = null;
         try {
-            for(File file : files) {
+            for (File file : files) {
                 fReader = new FileReader(file.getName());
                 bReader = new BufferedReader(fReader);
-                
+
                 try {
                     String line = "";
-                    while((line = bReader.readLine()) != null) {
+                    while ((line = bReader.readLine()) != null) {
                         String[] components = line.split("\t");
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                
+
             }
-            
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
     }
 
 }

@@ -44,9 +44,9 @@ public class HTMLExtractor {
     /**
      * Extracts the links for data pulling later. The method is based on the
      * baseURL, to prevent the scraper from pulling from other random web sites
-     * and currentDepth, used for recursive calling. currentDepth defines the depth of the 
-     * links to search.
-     * 
+     * and currentDepth, used for recursive calling. currentDepth defines the
+     * depth of the links to search.
+     *
      * The links are stored in a HashSet of Strings.
      *
      * @param baseURL
@@ -77,9 +77,13 @@ public class HTMLExtractor {
         }
 
     }
-    /**Converts the links stored as HashSet of Strings, to a text file. 
-     *      Each link is stored in a single line in the text file.
-     * @param fileName*/
+
+    /**
+     * Converts the links stored as HashSet of Strings, to a text file. Each
+     * link is stored in a single line in the text file.
+     *
+     * @param fileName
+     */
     public void writeLinksToFile(String fileName) {
         File file = new File(LINK_PREFIX + fileName);
 
@@ -93,16 +97,15 @@ public class HTMLExtractor {
             //Connect and set up writers.
 
             try (FileWriter fWriter = new FileWriter(fileName, true)) {
-                BufferedWriter bfWriter = new BufferedWriter(fWriter);
 
                 FileWriter linkWriter = new FileWriter(LINK_PREFIX + fileName, true);
-                BufferedWriter bfLinkWriter = new BufferedWriter(linkWriter);
-
                 // Write the list of links into a file. Format is (link_of_"baseName").txt
-                while (iterator.hasNext()) {
-                    writeStringToFile(iterator.next(), bfLinkWriter);
+                try (BufferedWriter bfLinkWriter = new BufferedWriter(linkWriter)) {
+                    // Write the list of links into a file. Format is (link_of_"baseName").txt
+                    while (iterator.hasNext()) {
+                        writeStringToFile(iterator.next(), bfLinkWriter);
+                    }
                 }
-                bfLinkWriter.close();
             }
         } catch (IOException ex) {
 
@@ -111,7 +114,7 @@ public class HTMLExtractor {
     }
 
     /**
-     * Use the links pulled from extractLinks  to pull data into text files.
+     * Use the links pulled from extractLinks to pull data into text files.
      *
      * @param baseURL
      * @param fileName
@@ -122,9 +125,8 @@ public class HTMLExtractor {
         Iterator<String> iterator = links.iterator();
         try {
             //Connect and set up writers.
-            Document doc = Jsoup.connect(baseURL).get();
-            try (FileWriter fWriter = new FileWriter(fileName, true)) {
-                BufferedWriter bfWriter = new BufferedWriter(fWriter);
+            Document doc;
+            try (FileWriter fWriter = new FileWriter(fileName, true); BufferedWriter bfWriter = new BufferedWriter(fWriter)) {
 
                 Iterator<String> iterator2 = links.iterator();
 
@@ -149,7 +151,6 @@ public class HTMLExtractor {
 
                 }
 
-                bfWriter.close();
             }
 
         } catch (IOException ex) {
@@ -160,8 +161,9 @@ public class HTMLExtractor {
 
     /**
      * Method to override
+     *
      * @param doc
-     * @return 
+     * @return
      */
     public Elements selectElement(Document doc) {
         Elements element = doc.select("html");
@@ -191,6 +193,7 @@ public class HTMLExtractor {
 
     /**
      * Write the input string into a line of a file. (Helper method).
+     *
      * @param string
      * @param bfWriter
      */

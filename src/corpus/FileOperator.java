@@ -9,7 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -60,7 +59,11 @@ public class FileOperator {
         boolean flag;
         //Define wordMetadatas, which is a list of all the wordMetadata that we want to write to a single file later.
         ArrayList<WordMetadata> wordMetadatas = new ArrayList<>();
+        ArrayList<String> categories = new ArrayList<>();
 
+        for (File file : arrayListFiles) {
+            categories.add(file.getName().split("_")[file.getName().split("_").length - 3]);
+        }
         //For each file in the relevant file list...
         for (File file : arrayListFiles) {
             try {
@@ -86,10 +89,8 @@ public class FileOperator {
                     WM.setFrequency(category, frequency);
 
                     WM.setRanking(category, counter);
-                    
-                   
+
                     //Check if the wordMetadatas contain the temporary WM wordmetadata.
-                   
                     for (WordMetadata wordMetadata : wordMetadatas) {
 
                         if (wordMetadata.equals(WM)) {
@@ -101,14 +102,12 @@ public class FileOperator {
                                 wordMetadata.setRanking(category, counter);
                             }
 
-                           
-                            System.out.println(counter);
+                            //System.out.println(counter);
                             flag = true;
                             break;
                         }
 
                     }
-
 
 //                    // Iterate through the wordMetadatas, checking if the generated WM pulled from the bufferedReader is in it. (equal name and language).
 //                    for (WordMetadata wordMetadata : wordMetadatas) {
@@ -132,48 +131,42 @@ public class FileOperator {
 //                            break;
 //                        }
 //                }
-                //If the list of wordMetadata doesn't contain the wordMetadata read from the line, then add to the list.
-                if (flag == false) {
-                    wordMetadatas.add(WM);
-                }
+                    //If the list of wordMetadata doesn't contain the wordMetadata read from the line, then add to the list.
+                    if (flag == false) {
+                        wordMetadatas.add(WM);
+                    }
 
-                counter++; //Increment counter (see definition of counter at top of method).
-            } //end read 1 line.
-        }catch (FileNotFoundException ex) {
+                    counter++; //Increment counter (see definition of counter at top of method).
+                } //end read 1 line.
+            } catch (FileNotFoundException ex) {
                 Logger.getLogger(FileOperator.class.getName()).log(Level.SEVERE, null, ex);
-            }catch (IOException ex) {
+            } catch (IOException ex) {
                 Logger.getLogger(FileOperator.class.getName()).log(Level.SEVERE, null, ex);
             }
-        System.out.println("Generated wordMetadata for a file.");
-        if (counters > 0) {
-            break;
+            System.out.println("Generated wordMetadata for a file.");
+
+            counters++;
         }
-        counters++;
+        for (WordMetadata wordMetadata : wordMetadatas) {
+            //System.out.println(wordMetadata.toString());
+        }
+        //Here we should have an array list of wordMetadata ready to be written to a file.
+
+        this.writeWordMetadatasToFile(wordMetadatas, fileName);
     }
-    for(WordMetadata wordMetadata : wordMetadatas
 
-    
-        ) {
-            System.out.println(wordMetadata.toString());
-    }
-    //Here we should have an array list of wordMetadata ready to be written to a file.
-     
-
-    this.writeWordMetadatasToFile(wordMetadatas, fileName);
-}
-
-/**
- * List relevant files according to the tag and root directory (working
- * directory). A relevant file must have all the tag string from the tags input.
- *
- * @param tags.
- * @return a list of relevant file.
- */
-public ArrayList<File> listFiles(String[] tags) {
+    /**
+     * List relevant files according to the tag and root directory (working
+     * directory). A relevant file must have all the tag string from the tags
+     * input.
+     *
+     * @param tags.
+     * @return a list of relevant file.
+     */
+    public ArrayList<File> listFiles(String[] tags) {
         String currentDirectory = System.getProperty("user.dir"); //Get the current directory of the system.
         File root = new File(currentDirectory);
         boolean flag; // Define flag to be whether a file contains every single tag.
-        
 
         //Get a collection of all the txt files in the current directory.
         ArrayList<File> arrayListFiles = new ArrayList<>();
@@ -193,7 +186,7 @@ public ArrayList<File> listFiles(String[] tags) {
                 //Add the file to the list of relevant files.
                 arrayListFiles.add(file);
             }
-           
+
         }
         return arrayListFiles; //return the relevant files.
 
@@ -233,11 +226,9 @@ public ArrayList<File> listFiles(String[] tags) {
             bWriter.close();
             fWriter.close();
 
-        
-
-} catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(FileOperator.class
-.getName()).log(Level.SEVERE, null, ex);
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
     }

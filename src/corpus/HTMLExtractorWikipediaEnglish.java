@@ -27,9 +27,10 @@ public class HTMLExtractorWikipediaEnglish extends HTMLExtractor {
     protected String modifier = "comments";
 
     public HTMLExtractorWikipediaEnglish() {
-        links = new HashSet<String>();
+        links = new HashSet<>();
     }
 
+    @Override
     public Elements selectElement(Document doc) {
         Elements element = doc.select("p");
         return element;
@@ -38,12 +39,13 @@ public class HTMLExtractorWikipediaEnglish extends HTMLExtractor {
     /**
      * Get links inside the Wiki, whose pages exists.
      */
+    @Override
     public void selectLink(Element page, double currentDepth, String baseURL) {
         String linkName = page.attr("abs:href");
         if (linkName.contains("https://en.wikipedia.org/wiki/") && !linkName.contains("#")
                 && !linkName.contains("redlink=1") && linkName.length() - linkName.replace(":", "").length() <= 1) {
             currentDepth++;
-            extractLinks(page.attr("abs:href"), currentDepth + super.MAX_DEPTH - MAX_DEPTH);
+            extractLinks(page.attr("abs:href"), currentDepth + HTMLExtractor.MAX_DEPTH - MAX_DEPTH);
         }
     }
 
