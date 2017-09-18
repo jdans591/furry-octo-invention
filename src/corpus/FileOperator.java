@@ -21,8 +21,8 @@ import org.apache.commons.io.FileUtils;
  */
 public class FileOperator {
 
-    
     private int test = 0;
+
     /**
      * Default constructor
      */
@@ -41,11 +41,10 @@ public class FileOperator {
         //Definitions of variables. These include arrayListFiles which is the list of relevant file names to combine.
         //Readers and writers are also defined here.
         ArrayList<File> arrayListFiles = listFiles(tags);
-        for(File file : arrayListFiles) {
+        for (File file : arrayListFiles) {
             System.out.println(file.getName());
         }
-        
-        
+
         FileReader fReader;
         BufferedReader bReader;
         FileWriter fWriter = null;
@@ -85,69 +84,92 @@ public class FileOperator {
                     int frequency = Integer.parseInt(components[1]);
                     //Record the frequencies and rankings of the wordMetadata by category.
                     WM.setFrequency(category, frequency);
-                    
+
                     WM.setRanking(category, counter);
                     
-
-                    // Iterate through the wordMetadatas, checking if the generated WM pulled from the bufferedReader is in it. (equal name and language).
+                   
+                    //Check if the wordMetadatas contain the temporary WM wordmetadata.
+                   
                     for (WordMetadata wordMetadata : wordMetadatas) {
-                        if (wordMetadata.equals(WM)) { //If the metadata already exists then override the frequencies and rankings.
-                            //By how the files are pulled, since each word in a file should be unique, and each file should have a unique category, the 
-                            //wordMetadata instantiated should be unique and thus this overridden shouldn't happen often, if at all.
-                            if(wordMetadata.getName().equalsIgnoreCase(WM.getName())) {
-                                
-                               
-                                if(wordMetadata.getFrequency(category) != null && wordMetadata.getRanking(category) != null) {
-                                    wordMetadata.setFrequency(category, frequency + wordMetadata.getFrequency(category));
+
+                        if (wordMetadata.equals(WM)) {
+                            if (wordMetadata.getFrequency(category) != null && wordMetadata.getRanking(category) != null) {
+                                wordMetadata.setFrequency(category, wordMetadata.getFrequency(category) + frequency);
                                 wordMetadata.setRanking(category, wordMetadata.getRanking(category));
-                                }
-                                
-                               
-                                flag = true;
-                                break;
+                            } else {
+                                wordMetadata.setFrequency(category, frequency);
+                                wordMetadata.setRanking(category, counter);
                             }
-                            wordMetadata.setFrequency(category, frequency);
-                            wordMetadata.setRanking(category, counter);
-                            System.out.println(WM.toString());
-                            flag = true; //Set flag to true (see flag definition at top of method).
+
+                           
+                            System.out.println(counter);
+                            flag = true;
                             break;
                         }
 
                     }
-                    //If the list of wordMetadata doesn't contain the wordMetadata read from the line, then add to the list.
-                    if (flag == false) {
-                        wordMetadatas.add(WM);
-                    }
 
-                    counter++; //Increment counter (see definition of counter at top of method).
-                } //end read 1 line.
-            } catch (FileNotFoundException ex) {
+
+//                    // Iterate through the wordMetadatas, checking if the generated WM pulled from the bufferedReader is in it. (equal name and language).
+//                    for (WordMetadata wordMetadata : wordMetadatas) {
+//                        if (wordMetadata.equals(WM)) { //If the metadata already exists then override the frequencies and rankings.
+//                            //By how the files are pulled, since each word in a file should be unique, and each file should have a unique category, the 
+//                            //wordMetadata instantiated should be unique and thus this overridden shouldn't happen often, if at all.
+//                            if (wordMetadata.getName().equalsIgnoreCase(WM.getName())) {
+//
+//                                if (wordMetadata.getFrequency(category) != null && wordMetadata.getRanking(category) != null) {
+//                                    wordMetadata.setFrequency(category, frequency + wordMetadata.getFrequency(category));
+//                                    wordMetadata.setRanking(category, wordMetadata.getRanking(category));
+//                                }
+//
+//                                flag = true;
+//                                break;
+//                            }
+//                            wordMetadata.setFrequency(category, frequency);
+//                            wordMetadata.setRanking(category, counter);
+//                            System.out.println(WM.toString());
+//                            flag = true; //Set flag to true (see flag definition at top of method).
+//                            break;
+//                        }
+//                }
+                //If the list of wordMetadata doesn't contain the wordMetadata read from the line, then add to the list.
+                if (flag == false) {
+                    wordMetadatas.add(WM);
+                }
+
+                counter++; //Increment counter (see definition of counter at top of method).
+            } //end read 1 line.
+        }catch (FileNotFoundException ex) {
                 Logger.getLogger(FileOperator.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
+            }catch (IOException ex) {
                 Logger.getLogger(FileOperator.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("Generated wordMetadata for a file.");
-             if(counters > 0) {
-                break;
-            }
-            counters++;
+        System.out.println("Generated wordMetadata for a file.");
+        if (counters > 0) {
+            break;
         }
-        for(WordMetadata wordMetadata : wordMetadatas) {
-            System.out.println(wordMetadata.toString());
-        }
-        //Here we should have an array list of wordMetadata ready to be written to a file.
-        this.writeWordMetadatasToFile(wordMetadatas, fileName);
+        counters++;
     }
+    for(WordMetadata wordMetadata : wordMetadatas
 
-    /**
-     * List relevant files according to the tag and root directory (working
-     * directory). A relevant file must have all the tag string from the tags
-     * input.
-     *
-     * @param tags.
-     * @return a list of relevant file.
-     */
-    public ArrayList<File> listFiles(String[] tags) {
+    
+        ) {
+            System.out.println(wordMetadata.toString());
+    }
+    //Here we should have an array list of wordMetadata ready to be written to a file.
+     
+
+    this.writeWordMetadatasToFile(wordMetadatas, fileName);
+}
+
+/**
+ * List relevant files according to the tag and root directory (working
+ * directory). A relevant file must have all the tag string from the tags input.
+ *
+ * @param tags.
+ * @return a list of relevant file.
+ */
+public ArrayList<File> listFiles(String[] tags) {
         String currentDirectory = System.getProperty("user.dir"); //Get the current directory of the system.
         File root = new File(currentDirectory);
         boolean flag; // Define flag to be whether a file contains every single tag.
@@ -211,8 +233,11 @@ public class FileOperator {
             bWriter.close();
             fWriter.close();
 
-        } catch (IOException ex) {
-            Logger.getLogger(FileOperator.class.getName()).log(Level.SEVERE, null, ex);
+        
+
+} catch (IOException ex) {
+            Logger.getLogger(FileOperator.class
+.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
