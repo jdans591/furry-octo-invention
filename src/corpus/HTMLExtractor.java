@@ -66,11 +66,11 @@ public class HTMLExtractor {
                 Elements linksOnPage = document.select("a[href]");
 
                 //For each link in a page, select valid ones.
-                for (Element page : linksOnPage) {
+                linksOnPage.forEach((page) -> {
                     //Implement according to website being searched. (specific implementation).
                     selectLink(page, currentDepth, baseURL);
                     //end specific implementation
-                }
+                });
             } catch (IOException e) {
 
             }

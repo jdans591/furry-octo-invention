@@ -43,12 +43,14 @@ public class WordListGenerator {
 
     /**
      * Generate a word frequency list based on the input file name.
+     * @param fileName
+     * @param nGramLength
      */
     public void generateWordFrequencyListEnglish(String fileName, int nGramLength) {
         FileReader fReader = null;
-        BufferedReader bReader = null;
+        BufferedReader bReader;
         FileWriter fWriter = null;
-        BufferedWriter bWriter = null;
+        BufferedWriter bWriter;
 
         wordList.clear();
 
@@ -67,10 +69,10 @@ public class WordListGenerator {
         bWriter = new BufferedWriter(fWriter);
         //end try catch for readers and writers
 
-        try {
+        try { //Read each line from the file and try to isolate words.
             String line;
             String[] words;
-            while ((line = bReader.readLine()) != null) {
+            while ((line = bReader.readLine()) != null) { // Remove/replace various non-alphabetical and non-numerical characters.
                 line = line.replace(".", "").replace("!", "").replace("[", " ").replace("]", " ").replace("(", " ").replace(")", " ")
                         .replace("/", " ").replace("?", " ").replace(",", " ").replace(":", " ").replace(";", " ").replace("\"", " ")
                         .replace("$", " ").replace("->", " ").replace(" -", " ").replace("- ", " ");
@@ -78,7 +80,8 @@ public class WordListGenerator {
                 words = line.split("\\s+|\\t+");
                 for (int i = 0; i < words.length; i++) {
                     String word = "";
-
+                    
+                    //nGram support (currently unused for nGram more than 1).
                     switch (nGramLength) {
                         case 1:
                             word = new StringBuilder(words[i]).toString();
@@ -104,10 +107,12 @@ public class WordListGenerator {
                             }
                             break;
                     }
-
+                    //Create a new wordInformation, which contains the preliminary information relating to a word.
                     WordInformation wordInformation = new WordInformation(word);
 
                     boolean containFlag = false;
+                    //Iterate through each word information in the wordList and see if they are 'equal'. If they are equal, increment the frequency, 
+                    //otherwise add the new wordInformation to the wordList. Repeat until we have 20,000 words in the wordList.
                     for (WordInformation wordIterate : wordList) {
                         if (wordIterate.name.equals(wordInformation.name)) {
                             containFlag = true;
@@ -117,7 +122,7 @@ public class WordListGenerator {
                     }
                     if (containFlag == false && wordList.size() < 20000) {
                         wordList.add(wordInformation);
-                        // System.out.println(wordInformation.name + " : " + wordInformation.frequency + " : " + counter++);
+                        
                     }
 
                 }
@@ -127,6 +132,7 @@ public class WordListGenerator {
         } catch (IOException ex) {
             Logger.getLogger(WordListGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //Sort the resulting wordList by frequency.
         Collections.sort(wordList);
 
         int sum = 0;
@@ -149,16 +155,17 @@ public class WordListGenerator {
 
     }
 
+    /**This method takes in  a buffered writer and write the content of the wordList to the file. The file will have the suffix "frequency_list...."
+     * @param bWriter */
     protected void writeToFile(BufferedWriter bWriter) {
-        for (WordInformation word : wordList) {
+        wordList.forEach((word) -> {
             try {
                 bWriter.write(word.name + "\t" + word.frequency);
                 bWriter.newLine();
             } catch (IOException ex) {
                 Logger.getLogger(WordListGenerator.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        }
+        });
         try {
             bWriter.flush();
             //bWriter.close();

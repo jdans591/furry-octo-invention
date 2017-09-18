@@ -9,7 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -21,6 +21,8 @@ import org.apache.commons.io.FileUtils;
  */
 public class FileOperator {
 
+    
+    private int test = 0;
     /**
      * Default constructor
      */
@@ -39,6 +41,11 @@ public class FileOperator {
         //Definitions of variables. These include arrayListFiles which is the list of relevant file names to combine.
         //Readers and writers are also defined here.
         ArrayList<File> arrayListFiles = listFiles(tags);
+        for(File file : arrayListFiles) {
+            System.out.println(file.getName());
+        }
+        
+        
         FileReader fReader;
         BufferedReader bReader;
         FileWriter fWriter = null;
@@ -78,15 +85,30 @@ public class FileOperator {
                     int frequency = Integer.parseInt(components[1]);
                     //Record the frequencies and rankings of the wordMetadata by category.
                     WM.setFrequency(category, frequency);
+                    
                     WM.setRanking(category, counter);
+                    
 
                     // Iterate through the wordMetadatas, checking if the generated WM pulled from the bufferedReader is in it. (equal name and language).
                     for (WordMetadata wordMetadata : wordMetadatas) {
                         if (wordMetadata.equals(WM)) { //If the metadata already exists then override the frequencies and rankings.
                             //By how the files are pulled, since each word in a file should be unique, and each file should have a unique category, the 
                             //wordMetadata instantiated should be unique and thus this overridden shouldn't happen often, if at all.
+                            if(wordMetadata.getName().equalsIgnoreCase(WM.getName())) {
+                                
+                               
+                                if(wordMetadata.getFrequency(category) != null && wordMetadata.getRanking(category) != null) {
+                                    wordMetadata.setFrequency(category, frequency + wordMetadata.getFrequency(category));
+                                wordMetadata.setRanking(category, wordMetadata.getRanking(category));
+                                }
+                                
+                               
+                                flag = true;
+                                break;
+                            }
                             wordMetadata.setFrequency(category, frequency);
                             wordMetadata.setRanking(category, counter);
+                            System.out.println(WM.toString());
                             flag = true; //Set flag to true (see flag definition at top of method).
                             break;
                         }
@@ -109,6 +131,9 @@ public class FileOperator {
                 break;
             }
             counters++;
+        }
+        for(WordMetadata wordMetadata : wordMetadatas) {
+            System.out.println(wordMetadata.toString());
         }
         //Here we should have an array list of wordMetadata ready to be written to a file.
         this.writeWordMetadatasToFile(wordMetadatas, fileName);
@@ -167,7 +192,7 @@ public class FileOperator {
         String line; //Define a string line to represent the string representation of a wordMetadata.
 
         String currentDirectory = System.getProperty("user.dir");
-        File root = new File(currentDirectory + File.separator + "fileName");
+        File root = new File(currentDirectory + File.separator + fileName);
 
         try {
             FileWriter fWriter;

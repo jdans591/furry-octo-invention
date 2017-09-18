@@ -20,7 +20,7 @@ public class WordMetadata {
     private String PoS;
     private double specificity;
     private HashMap<String, Integer> frequencies = new HashMap(); // A map of frequencies of this word for each category/topic.
-    private HashMap<String, Integer> rankings = new HashMap();
+    private HashMap<String, Integer> rankings = new HashMap(); // A map of the rankings of this word for each category topic.
 
     /**
      * Default constructor
@@ -180,7 +180,8 @@ public class WordMetadata {
      * @param value
      */
     public void setFrequency(String category, int value) {
-        this.frequencies.put(category, value);
+        Integer temp = value;
+        this.frequencies.put(category, temp);
     }
 
     /**
@@ -190,7 +191,8 @@ public class WordMetadata {
      * @param value
      */
     public void setRanking(String category, int value) {
-        this.rankings.put(category, value);
+        Integer temp = value;
+        this.rankings.put(category, temp);
     }
 
     /**
@@ -277,8 +279,8 @@ public class WordMetadata {
         //We want the name, frequency map, and ranking map.
         wordName = this.getName(); // Name done.
 
-        frequenciesCategories = this.getFrequencyCategories(); //Get the categories in array list of string format.
-        rankingsCategories = this.getRankingCategories();
+        frequenciesCategories = this.getFrequencyCategories(); //Get the categories in array list of string format (unsorted).
+        rankingsCategories = this.getRankingCategories(); //Get the rankings in array list of string format (unsorted).
 
         Collections.sort(frequenciesCategories); //Sort both lists so that the resulting string is written in alphabetical order.
         Collections.sort(rankingsCategories);
