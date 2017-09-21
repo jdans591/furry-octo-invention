@@ -21,11 +21,13 @@ import org.apache.commons.io.FileUtils;
 public class FileOperator {
 
     private int test = 0;
+    private int counter;
 
     /**
      * Default constructor
      */
     public FileOperator() {
+        this.counter = 0;
 
     }
 
@@ -51,12 +53,11 @@ public class FileOperator {
         String[] components;
         //Define counter, which is the current lineNumber.
         //Define flag, which means whether the wordMetadata read from the frequency list is already present in the local list.
-        int counter;
-        int counters = 0;
+
         boolean flag;
         //Define wordMetadatas, which is a list of all the wordMetadata that we want to write to a single file later.
         ArrayList<WordMetadata> wordMetadatas = new ArrayList<>();
-       
+
         //For each file in the relevant file list...
         for (File file : arrayListFiles) {
             try {
@@ -82,8 +83,8 @@ public class FileOperator {
                     WM.setFrequency(category, frequency);
 
                     WM.setRanking(category, counter);
-                    
-                    if(WM.getFrequency(category) < 5) {
+
+                    if (WM.getFrequency(category) < 5) {
                         continue;
                     }
 
@@ -106,7 +107,7 @@ public class FileOperator {
 
                     }
 
-        //If the list of wordMetadata doesn't contain the wordMetadata read from the line, then add to the list.
+                    //If the list of wordMetadata doesn't contain the wordMetadata read from the line, then add to the list.
                     if (flag == false) {
                         wordMetadatas.add(WM);
                     }
@@ -120,13 +121,10 @@ public class FileOperator {
             }
             System.out.println("Generated wordMetadata for a file.");
 
-            counters++;
+            counter++;
         }
-        for (WordMetadata wordMetadata : wordMetadatas) {
-            //System.out.println(wordMetadata.toString());
-        }
-        //Here we should have an array list of wordMetadata ready to be written to a file.
 
+        //Here we should have an array list of wordMetadata ready to be written to a file.
         this.writeWordMetadatasToFile(wordMetadatas, fileName);
     }
 

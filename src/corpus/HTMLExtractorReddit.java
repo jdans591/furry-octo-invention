@@ -11,7 +11,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- *
+ *This class extends the HTMLExtractor class. It is a specific implementation of the HTMLExtractor.
+ * It can pull content from the Reddit web site.
  * @author Dhanasit
  */
 public class HTMLExtractorReddit extends HTMLExtractor {

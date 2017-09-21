@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ *This class is a word list generator. It can generate a word frequency list from the given file name. 
  * @author Dhanasit
  */
 public class WordListGenerator {
@@ -42,7 +42,8 @@ public class WordListGenerator {
     }
 
     /**
-     * Generate a word frequency list based on the input file name.
+     * Generate a word frequency list based on the input file name. The word frequency list is stored as an array list of WordInformation.
+     * The word frequency list can be written to a file using the method writeToFile, which is also in this class.
      * @param fileName
      * @param nGramLength
      */
@@ -81,7 +82,7 @@ public class WordListGenerator {
                 for (int i = 0; i < words.length; i++) {
                     String word = "";
                     
-                    //nGram support (currently unused for nGram more than 1).
+                    //Case 1 is the standard case. Other cases are for nGrams (currently unused for nGram more than 1).
                     switch (nGramLength) {
                         case 1:
                             word = new StringBuilder(words[i]).toString();
@@ -120,6 +121,7 @@ public class WordListGenerator {
                             break;
                         }
                     }
+                    //If iterated word is 'unique' then add it to the word frequency list until 20,000 words have been added.
                     if (containFlag == false && wordList.size() < 20000) {
                         wordList.add(wordInformation);
                         

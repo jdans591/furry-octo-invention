@@ -11,6 +11,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
+ * This class extends the HTMLExtractor class. It is a specific implementation
+ * of the HTMLExtractor class. It can scrape the text content of the English
+ * Wikipedia web site.
  *
  * @author Dhanasit
  */
@@ -26,10 +29,19 @@ public class HTMLExtractorWikipediaEnglish extends HTMLExtractor {
 
     protected String modifier = "comments";
 
+    /**
+     * Default constructor
+     */
     public HTMLExtractorWikipediaEnglish() {
         links = new HashSet<>();
     }
 
+    /**
+     * This method selects the text to scrape from, using the English Wikipedia
+     * HTML formatting.
+     *
+     * @return
+     */
     @Override
     public Elements selectElement(Document doc) {
         Elements element = doc.select("p");
@@ -37,7 +49,7 @@ public class HTMLExtractorWikipediaEnglish extends HTMLExtractor {
     }
 
     /**
-     * Get links inside the Wiki, whose pages exists.
+     * Get links inside the Wikipedia, whose pages exists.
      */
     @Override
     public void selectLink(Element page, double currentDepth, String baseURL) {
