@@ -1,6 +1,7 @@
 package corpus;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
@@ -19,6 +20,8 @@ public class WordMetadata {
     private String language;
     private String PoS;
     private double specificity;
+    private final int NUMBEROFCATEGORIES;
+    private final int WORDSPERFILE;
     private HashMap<String, Integer> frequencies = new HashMap(); // A map of frequencies of this word for each category/topic.
     private HashMap<String, Integer> rankings = new HashMap(); // A map of the rankings of this word for each category topic.
 
@@ -26,7 +29,8 @@ public class WordMetadata {
      * Default constructor
      */
     public WordMetadata() {
-
+        this.NUMBEROFCATEGORIES = 45;
+        this.WORDSPERFILE = 20000;
     }
 
     /**
@@ -35,6 +39,8 @@ public class WordMetadata {
      * @param name
      */
     public WordMetadata(String name) {
+        this.NUMBEROFCATEGORIES = 45;
+        this.WORDSPERFILE = 20000;
         this.name = name;
     }
 
@@ -45,6 +51,8 @@ public class WordMetadata {
      * @param language
      */
     public WordMetadata(String name, String language) {
+        this.NUMBEROFCATEGORIES = 50;
+        this.WORDSPERFILE = 20000;
         this.name = name;
         this.language = language;
     }
@@ -202,9 +210,8 @@ public class WordMetadata {
      * A lower value indicates that a word is generally used across many
      * different topics.
      *
-     * @return the word specificity value as a double.
      */
-    public double calculateSpecificity() {
+    public void calculateSpecificity() {
         ArrayList<Integer> integerList = new ArrayList<>();
 
         //Convert the values in the rankings to a list of integers.
@@ -214,16 +221,44 @@ public class WordMetadata {
 
         //Sort the integer list and convert to a double array format ready for analysis.
         Collections.sort(integerList);
+        while(integerList.size() < this.NUMBEROFCATEGORIES) {
+            integerList.add(this.WORDSPERFILE);
+        }
+        
         double[] doubleArray = integerList.stream().mapToDouble(i -> i).toArray();
+        
+       
 
         //Use the Statistics class to get the common statistical measures of central tendencies and standard deviation for analysis later.
         Statistics statistics = new Statistics(doubleArray);
         double median = statistics.getMedian();
         double mean = statistics.getMean();
         double stdDev = statistics.getStdDev();
+        double ZValue = stdDev/mean;
+        
+        double[] doubleArrayNoOutlier;
+        double stdDevNoOutlier = 1;
+        double meanNoOutlier;
+        double ZValueNoOutlier;
+        
+       
+        
+        if(doubleArray.length == 1) {
+            
+        }
+        
+        if(doubleArray.length >= 5) {
+            doubleArrayNoOutlier = Arrays.copyOfRange(doubleArray, 1, doubleArray.length - 1);
+            Statistics statisticsNoOutlier = new Statistics(doubleArrayNoOutlier);
+            stdDevNoOutlier = statisticsNoOutlier.getStdDev();
+            meanNoOutlier = statisticsNoOutlier.getMean();
+            ZValueNoOutlier = stdDevNoOutlier/meanNoOutlier;
+        }
+        
+        double specificityRatio = stdDev/stdDevNoOutlier;
 
-        this.setSpecificity(stdDev); // Set the specificity rating for this wordMetadata.
-        return stdDev;
+        this.setSpecificity(specificityRatio); // Set the specificity rating for this wordMetadata.
+        
 
     }
 

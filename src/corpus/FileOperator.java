@@ -121,8 +121,13 @@ public class FileOperator {
             }
             System.out.println("Generated wordMetadata for a file.");
 
-            counter++;
-        }
+            counter++; // Go to next file. End read 1 file.
+        } // end read all files.
+        
+        //For each wordMetadata, calculate its specificity rating.
+        wordMetadatas.forEach((wordMetadata) -> {
+            wordMetadata.calculateSpecificity();
+        });
 
         //Here we should have an array list of wordMetadata ready to be written to a file.
         this.writeWordMetadatasToFile(wordMetadatas, fileName);

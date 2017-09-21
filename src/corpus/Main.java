@@ -199,12 +199,12 @@ public class Main {
 
     /**
      * From all the relevant word frequency lists, calculate the word
-     * 'specifivity'. This is an estimate measure of how 'specific' a word is to
+     * 'specificity'. This is an estimate measure of how 'specific' a word is to
      * its category. For example, if a word is common in all categories, or it
      * is uncommon in all categories, then that word is not very 'specific'.
      * However, if a word is common in only a few category, but uncommon in most
      * of the other categories, then the word is deemed to be quite specific and
-     * thus will have a higher 'specifivity' rating.
+     * thus will have a higher 'specificity' rating.
      */
     private static void calculateWordSpecifivityEnglish(String fileName) {
 

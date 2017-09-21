@@ -32,6 +32,8 @@ public class HTMLExtractor {
     protected static final double MAX_DEPTH = 2;
     protected static final double MAX_PAGE = 3;
     protected static final String LINK_PREFIX = "link_of_";
+    
+    protected FileOperator fileOperator = new FileOperator();
 
     protected String modifier = "comments";
 
