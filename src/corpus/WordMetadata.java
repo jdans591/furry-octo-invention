@@ -255,7 +255,7 @@ public class WordMetadata {
             ZValueNoOutlier = stdDevNoOutlier/meanNoOutlier;
         }
         
-        double specificityRatio = ZValue/ZValueNoOutlier;
+        double specificityRatio = stdDev/stdDevNoOutlier;
 
         this.setSpecificity(specificityRatio); // Set the specificity rating for this wordMetadata.
         
