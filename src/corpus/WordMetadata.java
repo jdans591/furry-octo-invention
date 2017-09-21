@@ -51,7 +51,7 @@ public class WordMetadata {
      * @param language
      */
     public WordMetadata(String name, String language) {
-        this.NUMBEROFCATEGORIES = 50;
+        this.NUMBEROFCATEGORIES = 45;
         this.WORDSPERFILE = 20000;
         this.name = name;
         this.language = language;
@@ -222,7 +222,9 @@ public class WordMetadata {
         //Sort the integer list and convert to a double array format ready for analysis.
         Collections.sort(integerList);
         while(integerList.size() < this.NUMBEROFCATEGORIES) {
-            integerList.add(this.WORDSPERFILE);
+            double random = 10000 * Math.random();
+            
+            integerList.add(this.WORDSPERFILE + (int) random);
         }
         
         double[] doubleArray = integerList.stream().mapToDouble(i -> i).toArray();
@@ -239,13 +241,11 @@ public class WordMetadata {
         double[] doubleArrayNoOutlier;
         double stdDevNoOutlier = 1;
         double meanNoOutlier;
-        double ZValueNoOutlier;
+        double ZValueNoOutlier = 1;
         
        
         
-        if(doubleArray.length == 1) {
-            
-        }
+        
         
         if(doubleArray.length >= 5) {
             doubleArrayNoOutlier = Arrays.copyOfRange(doubleArray, 1, doubleArray.length - 1);
@@ -255,7 +255,7 @@ public class WordMetadata {
             ZValueNoOutlier = stdDevNoOutlier/meanNoOutlier;
         }
         
-        double specificityRatio = stdDev/stdDevNoOutlier;
+        double specificityRatio = ZValue/ZValueNoOutlier;
 
         this.setSpecificity(specificityRatio); // Set the specificity rating for this wordMetadata.
         

@@ -124,9 +124,15 @@ public class FileOperator {
             counter++; // Go to next file. End read 1 file.
         } // end read all files.
         
-        //For each wordMetadata, calculate its specificity rating.
+        //For each wordMetadata, calculate its specificity rating and filter unnecessary words.
         wordMetadatas.forEach((wordMetadata) -> {
             wordMetadata.calculateSpecificity();
+            
+            
+            ArrayList<Integer> frequencies = wordMetadata.getFrequencies();
+            
+            int sum = frequencies.stream().mapToInt(Integer::intValue).sum();
+            
         });
 
         //Here we should have an array list of wordMetadata ready to be written to a file.
