@@ -121,6 +121,15 @@ public class Main {
 
         //calculateWordSpecifivityEnglish();
         ///////////////////////////////////////////////////End calculating word specifivity
+        
+        
+        //Find example sentences from dictionary (english so far).
+        ArrayList<WordMetadata> wordMetadatas = fileOperator.getWordMetadatas();
+        
+        
+            
+            scrapeCambridge(wordMetadatas);
+        
     }
 
     /**
@@ -137,6 +146,35 @@ public class Main {
             System.out.println("Successful?");
 
         }
+    }
+    
+    private static void scrapeWebsite(String websiteName, String topic) {
+        if(websiteName.equals("Wikipedia")) {
+            scrapeWikipedia(topic);
+        } 
+    }
+    
+  
+    
+    private static void scrapeCambridge(ArrayList<WordMetadata> wordMetadatas) {
+        HTMLExtractorCambridgeEnglish HTMLece = new HTMLExtractorCambridgeEnglish();
+        String URL = "http://dictionary.cambridge.org/dictionary/english/";
+        for(WordMetadata wordMetadata : wordMetadatas) {
+            URL = "http://dictionary.cambridge.org/dictionary/english/" + wordMetadata.getName();
+            HTMLece.extractLinks(URL, 1);
+            HTMLece.writeLinksToFile("Cambridge_english" + ".txt");
+            
+            
+        }
+        
+        HTMLece.writeToFile(URL, "Cambridge_english_" + ".txt" );
+      
+        
+        
+        
+        
+        
+        
     }
 
     /**

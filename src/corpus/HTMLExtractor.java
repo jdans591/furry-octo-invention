@@ -29,7 +29,7 @@ public class HTMLExtractor {
     protected ArrayList<String> listString;
 
     protected String globalURL = "https://www.reddit.com/r/travel/";
-    protected static final double MAX_DEPTH = 2;
+    protected static final int MAX_DEPTH = 2;
     protected static final double MAX_PAGE = 3;
     protected static final String LINK_PREFIX = "link_of_";
     
@@ -60,6 +60,10 @@ public class HTMLExtractor {
         if (!links.contains(baseURL) && currentDepth < MAX_DEPTH) {
             try {
                 if (links.add(baseURL)) {
+                    if(baseURL.contains("http://dictionary.cambridge.org/dictionary/english/")) {
+                        
+                        return;
+                    }
                     System.out.println(baseURL); //list of links added to the list
                 }
 
@@ -89,9 +93,7 @@ public class HTMLExtractor {
     public void writeLinksToFile(String fileName) {
         File file = new File(LINK_PREFIX + fileName);
 
-        if (file.exists()) {
-            return;
-        }
+      
 
         //Start iterating through the hashset (in no particular order).
         Iterator<String> iterator = links.iterator();
@@ -107,6 +109,7 @@ public class HTMLExtractor {
                     while (iterator.hasNext()) {
                         writeStringToFile(iterator.next(), bfLinkWriter);
                     }
+                    links = new HashSet<>();
                 }
             }
         } catch (IOException ex) {

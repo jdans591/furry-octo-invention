@@ -13,6 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
+
+
 /**
  * Deals with operations relating to file input/output.
  *
@@ -22,6 +24,7 @@ public class FileOperator {
 
     private int test = 0;
     private int counter;
+    private ArrayList<WordMetadata> wordMetadatas;
 
     /**
      * Default constructor
@@ -56,7 +59,7 @@ public class FileOperator {
 
         boolean flag;
         //Define wordMetadatas, which is a list of all the wordMetadata that we want to write to a single file later.
-        ArrayList<WordMetadata> wordMetadatas = new ArrayList<>();
+        wordMetadatas = new ArrayList<>();
 
         //For each file in the relevant file list...
         for (File file : arrayListFiles) {
@@ -216,5 +219,11 @@ public class FileOperator {
         }
 
     }
+    
+    public ArrayList<WordMetadata> getWordMetadatas() {
+        return wordMetadatas;
+    }
+    
+ 
 
 }
